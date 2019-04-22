@@ -1,0 +1,27 @@
+{
+  "name": "agency-api",
+  "version": "1.0.0",
+  "description": "REST API with Node.js Express and PostgreSQL DB",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_PATH=.; && nodemon ./bin/www"
+  },
+  "author": "Katherine Shevchenko",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.10",
+    "pg": "^7.9.0",
+    "serve-favicon": "^2.5.0"
+  }
+}
