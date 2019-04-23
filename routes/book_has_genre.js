@@ -4,7 +4,7 @@ const router = express.Router();
 // require controller modules
 const book_has_genre_controller = require('./../controllers/book_has_genre');
 
-/// BookHasGenres ROUTES ///
+/// BookHasGenre ROUTES ///
 
 // POST request for create Book-Genre
 router.post('/book_has_genre', book_has_genre_controller.book_has_genre_create);
