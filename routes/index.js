@@ -11,6 +11,10 @@ const book_has_genre = require('./book_has_genre');
 const author_has_genre = require('./author_has_genre');
 const book_has_author = require('./book_has_author');
 const serie_has_author = require('./serie_has_author');
+const favourite_books = require('./favourite_books');
+const favourite_authors = require('./favourite_authors');
+const favourite_genres = require('./favourite_genres');
+const favourite_series = require('./favourite_series');
 
 module.exports = function (app) {
   app.use('/', homepage);
@@ -26,4 +30,8 @@ module.exports = function (app) {
   app.use('/', author_has_genre);
   app.use('/', book_has_author);
   app.use('/', serie_has_author);
+  app.use('/favourite_books/', favourite_books);
+  app.use('/favourite_authors/', favourite_authors);
+  app.use('/favourite_genres/', favourite_genres);
+  app.use('/favourite_series/', favourite_series);
 };
