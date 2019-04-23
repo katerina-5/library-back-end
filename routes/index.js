@@ -8,6 +8,8 @@ const series = require('./series');
 const users = require('./users');
 const administrators = require('./administrators');
 const book_has_genre = require('./book_has_genre');
+const author_has_genre = require('./author_has_genre');
+const book_has_author = require('./book_has_author');
 
 module.exports = function (app) {
   app.use('/', homepage);
@@ -20,4 +22,6 @@ module.exports = function (app) {
   app.use('/users', users);
   app.use('/administrators', administrators);
   app.use('/', book_has_genre);
+  app.use('/', author_has_genre);
+  app.use('/', book_has_author);
 };
