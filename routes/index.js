@@ -7,6 +7,7 @@ const genres = require('./genres');
 const series = require('./series');
 const users = require('./users');
 const administrators = require('./administrators');
+const book_has_genre = require('./book_has_genre');
 
 module.exports = function (app) {
   app.use('/', homepage);
@@ -18,4 +19,5 @@ module.exports = function (app) {
   // app.use('/users', [middlewareAuth, users]);
   app.use('/users', users);
   app.use('/administrators', administrators);
+  app.use('/', book_has_genre);
 };
