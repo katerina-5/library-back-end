@@ -15,6 +15,8 @@ const favourite_books = require('./favourite_books');
 const favourite_authors = require('./favourite_authors');
 const favourite_genres = require('./favourite_genres');
 const favourite_series = require('./favourite_series');
+const parser = require('./parser');
+const search = require('./search');
 
 module.exports = function (app) {
   app.use('/', homepage);
@@ -34,4 +36,6 @@ module.exports = function (app) {
   app.use('/favourite_authors/', favourite_authors);
   app.use('/favourite_genres/', favourite_genres);
   app.use('/favourite_series/', favourite_series);
+  app.use('/parser', parser);
+  app.use('/search', search);
 };
