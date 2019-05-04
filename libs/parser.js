@@ -28,9 +28,18 @@ async function parseBook(url) {
 
     let bookEntity = bookParser.Book;
     result.book = bookEntity.json;
-    result.authors = bookParser.Authors;
-    result.genres = bookParser.Genres;
-    result.serie = bookParser.Serie;
+    let authors = bookParser.Authors;
+    authors.forEach(author => {
+        result.authors.push(author.json);
+    });
+    let genres = bookParser.Genres;
+    genres.forEach(genre => {
+        result.genres.push(genre.json);
+    })
+    let serieEntity = bookParser.Serie;
+    if (!(serieEntity == null)) {
+        result.serie = serieEntity.json;
+    }
 
     console.log("Parsed book: " + JSON.stringify(result.book));
 
