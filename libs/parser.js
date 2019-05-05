@@ -39,6 +39,7 @@ async function parseBook(url) {
     let serieEntity = bookParser.Serie;
     if (!(serieEntity == null)) {
         result.serie = serieEntity.json;
+        // result.book.id_serie = serieEntity.json.id_serie;
     }
 
     console.log("Parsed book: " + JSON.stringify(result.book));

@@ -13,11 +13,11 @@ async function parse_book(request, response, next) {
     console.log('Parsing of book');
 
     console.log(request.body.url);
-    const json = await libParser.parseBook(request.body.url);
+    let json = await libParser.parseBook(request.body.url);
 
     try {
         // SERIE
-        let id_serie = null;
+        // let id_serie = json.book.id_serie; // = null;
         if (!(json.serie == null || {})) {
             const { title_serie, url_serie, description } = json.serie;
             let checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
@@ -29,18 +29,18 @@ async function parse_book(request, response, next) {
                 // check serie again
                 checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
                     [url_serie]);
-                id_serie = checkSerie.rows[0].id_serie;
             } else {
-                id_serie = checkSerie.rows[0].id_serie;
                 // update series
                 const editSerie = await pool.query('update series set title_serie = $2, url_serie = $3, description = $4 where id_serie = $1',
-                    [id_serie, title_serie, url_serie, description]);
+                    [checkSerie.rows[0].id_serie, title_serie, url_serie, description]);
             }
+            // id_serie = checkSerie.rows[0].id_serie;
+            json.book.id_serie = checkSerie.rows[0].id_serie;
         }
 
         // BOOK
         let id_book = null;
-        const { title_book, url_book, image_url, year, description, rating } = json.book;
+        const { id_serie, title_book, url_book, image_url, year, description, rating } = json.book;
         let checkBook = await pool.query('SELECT id_book FROM books WHERE url_book = $1',
             [url_book]);
         if (checkBook.rowCount === 0) {
