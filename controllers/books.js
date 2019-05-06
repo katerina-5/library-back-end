@@ -5,7 +5,10 @@ module.exports = {
     book_detail,
     book_create,
     book_delete,
-    book_update
+    book_update,
+    book_authors,
+    book_genres,
+    book_serie
 };
 
 // Display list of all books.
@@ -73,6 +76,51 @@ async function book_delete(request, response, next) {
         const id_book = request.params.id;
 
         const results = await pool.query('DELETE FROM books WHERE id_book = $1', [id_book]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all authors of book by id_book
+async function book_authors(request, response, next) {
+    console.log('Book\'s authors');
+
+    try {
+        const id_book = request.params.id;
+
+        const results = await pool.query('select authors.* from books inner join bookhasauthor using(id_book) inner join authors using(id_author) where books.id_book = $1',
+            [id_book]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all genres of book by id_book
+async function book_genres(request, response, next) {
+    console.log('Book\'s genres');
+
+    try {
+        const id_book = request.params.id;
+
+        const results = await pool.query('select genres.* from books inner join bookhasgenre using(id_book) inner join genres using(id_genre) where books.id_book = $1',
+            [id_book]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get serie of book by id_book
+async function book_serie(request, response, next) {
+    console.log('Book\'s serie');
+
+    try {
+        const id_book = request.params.id;
+
+        const results = await pool.query('select * from series where id_serie = (select id_serie from books where id_book = $1)',
+            [id_book]);
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
