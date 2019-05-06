@@ -16,31 +16,9 @@ async function parse_book(request, response, next) {
     let json = await libParser.parseBook(request.body.url);
 
     try {
-        // SERIE
-        // let id_serie = json.book.id_serie; // = null;
-        if (!(json.serie == null || {})) {
-            const { title_serie, url_serie, description } = json.serie;
-            let checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
-                [url_serie]);
-            if (checkSerie.rowCount === 0) {
-                // insert into series
-                const addSerie = await pool.query('insert into series(title_serie, url_serie, description) values($1, $2, $3)',
-                    [title_serie, url_serie, description]);
-                // check serie again
-                checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
-                    [url_serie]);
-            } else {
-                // update series
-                const editSerie = await pool.query('update series set title_serie = $2, url_serie = $3, description = $4 where id_serie = $1',
-                    [checkSerie.rows[0].id_serie, title_serie, url_serie, description]);
-            }
-            // id_serie = checkSerie.rows[0].id_serie;
-            json.book.id_serie = checkSerie.rows[0].id_serie;
-        }
-
         // BOOK
         let id_book = null;
-        const { id_serie, title_book, url_book, image_url, year, description, rating } = json.book;
+        const { title_book, url_book, image_url, year, description, rating } = json.book;
         let checkBook = await pool.query('SELECT id_book FROM books WHERE url_book = $1',
             [url_book]);
         if (checkBook.rowCount === 0) {
@@ -52,10 +30,39 @@ async function parse_book(request, response, next) {
                 [url_book]);
         } else {
             // update books
-            const editBook = await pool.query('update books set id_serie = $2, title_book = $3, url_book = $4, image_url = $5, year = $6, description = $7, rating = $8 where id_book = $1',
-                [id_book, id_serie, title_book, url_book, image_url, year, description, rating]);
+            const editBook = await pool.query('update books set title_book = $2, url_book = $3, image_url = $4, year = $5, description = $6, rating = $7 where id_book = $1',
+                [id_book, title_book, url_book, image_url, year, description, rating]);
         }
         id_book = checkBook.rows[0].id_book;
+
+        // SERIE
+        let id_serie = null;
+        if (json.serie != {}) {
+            // console.log('CONGRATULATIONS! Serie exists.');
+
+            const { title_serie, url_serie, description } = json.serie;
+            let checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
+                [url_serie]);
+            if (checkSerie.rowCount === 0) {
+                // insert into series
+                const addSerie = await pool.query('insert into series(title_serie, url_serie, description) values($1, $2, $3)',
+                    [title_serie, url_serie, description]);
+                // check serie again
+                checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
+                    [url_serie]);
+
+                const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
+                    [id_book, checkSerie.rows[0].id_serie]);
+            } else {
+                // update series
+                const editSerie = await pool.query('update series set title_serie = $2, url_serie = $3, description = $4 where id_serie = $1',
+                    [checkSerie.rows[0].id_serie, title_serie, url_serie, description]);
+
+                const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
+                    [id_book, checkSerie.rows[0].id_serie]);
+            }
+            // id_serie = checkSerie.rows[0].id_serie;
+        }
 
         // AUTHORS
         let authors_id = [];
@@ -145,7 +152,7 @@ async function parse_book(request, response, next) {
 
         // response.status(200).json(json);
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         next(error);
     }
 }
