@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const pool = require('../config/postgresql').pool;
+
 // Require controller modules.
 const author_controller = require('../controllers/authors');
 
@@ -20,5 +22,11 @@ router.put('/:id', author_controller.author_update);
 
 // DELETE request to delete author.
 router.delete('/:id', author_controller.author_delete);
+
+router.get('/books/:id', author_controller.author_books);
+
+router.get('/genres/:id', author_controller.author_genres);
+
+router.get('/series/:id', author_controller.author_series);
 
 module.exports = router;

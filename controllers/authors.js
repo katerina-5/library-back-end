@@ -5,7 +5,10 @@ module.exports = {
     author_detail,
     author_create,
     author_delete,
-    author_update
+    author_update,
+    author_books,
+    author_genres,
+    author_series
 };
 
 // Display list of all authors.
@@ -73,6 +76,51 @@ async function author_delete(request, response, next) {
         const id_author = request.params.id;
 
         const results = await pool.query('DELETE FROM authors WHERE id_author = $1', [id_author]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all books of author by id_author
+async function author_books(request, response, next) {
+    console.log('Author\'s books');
+
+    try {
+        const id_author = request.params.id;
+
+        const results = await pool.query('select books.* from books inner join bookhasauthor using(id_book) inner join authors using(id_author) where authors.id_author = $1',
+            [id_author]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all genres of author by id_author
+async function author_genres(request, response, next) {
+    console.log('Author\'s genres');
+
+    try {
+        const id_author = request.params.id;
+
+        const results = await pool.query('select genres.* from genres inner join authorhasgenres using(id_genre) inner join authors using(id_author) where authors.id_author = $1',
+            [id_author]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all book series of author by id_author
+async function author_series(request, response, next) {
+    console.log('Author\'s series');
+
+    try {
+        const id_author = request.params.id;
+
+        const results = await pool.query('select series.* from series inner join seriehasauthors using(id_serie) inner join authors using(id_author) where authors.id_author = $1',
+            [id_author]);
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
