@@ -5,7 +5,9 @@ module.exports = {
     genre_detail,
     genre_create,
     genre_delete,
-    genre_update
+    genre_update,
+    genre_books,
+    genre_authors
 };
 
 // Display list of all genres.
@@ -73,6 +75,36 @@ async function genre_delete(request, response, next) {
         const id_genre = request.params.id;
 
         const results = await pool.query('DELETE FROM genres WHERE id_genre = $1', [id_genre]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all books of genre by id_genre
+async function genre_books(request, response, next) {
+    console.log('Genres\'s books');
+
+    try {
+        const id_genre = request.params.id;
+
+        const results = await pool.query('select books.* from books inner join bookhasgenre using(id_book) inner join genres using(id_genre) where genres.id_genre = $1',
+            [id_genre]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all authors of genre by id_genre
+async function genre_authors(request, response, next) {
+    console.log('Genres\'s authors');
+
+    try {
+        const id_genre = request.params.id;
+
+        const results = await pool.query('select authors.* from authors inner join authorhasgenres using(id_author) inner join genres using(id_genre) where genres.id_genre = $1',
+            [id_genre]);
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
