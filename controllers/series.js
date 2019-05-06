@@ -5,7 +5,9 @@ module.exports = {
     serie_detail,
     serie_create,
     serie_delete,
-    serie_update
+    serie_update,
+    serie_books,
+    serie_authors
 };
 
 // Display list of all series.
@@ -73,6 +75,36 @@ async function serie_delete(request, response, next) {
         const id_serie = request.params.id;
 
         const results = await pool.query('DELETE FROM series WHERE id_serie = $1', [id_serie]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all books of serie by id_serie
+async function serie_books(request, response, next) {
+    console.log('Serie\'s books');
+
+    try {
+        const id_serie = request.params.id;
+
+        const results = await pool.query('select * from books where id_serie = $1',
+            [id_serie]);
+        response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all authors of serie by id_serie
+async function serie_authors(request, response, next) {
+    console.log('Serie\'s authors');
+
+    try {
+        const id_serie = request.params.id;
+
+        const results = await pool.query('select authors.* from series inner join seriehasauthors using(id_serie) inner join authors using(id_author) where series.id_serie = $1',
+            [id_serie]);
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
