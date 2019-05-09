@@ -4,7 +4,8 @@ const authLib = require('../libs/favourite');
 module.exports = {
     favourite_book_create,
     favourite_book_delete,
-    get_favourite_books
+    get_favourite_books,
+    check_book
 }
 
 // create favourite book
@@ -49,6 +50,26 @@ async function get_favourite_books(request, response, next) {
         const results = await pool.query('SELECT * FROM books WHERE id_book IN (SELECT id_book FROM favouritebooks WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// check book in favourite books
+async function check_book(request, response, next) {
+    console.log('Check book in favourite books');
+
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_book = request.body.id_book;
+
+    try {
+        const results = await pool.query('select * from favouritebooks where id_user = $1 and id_book = $2', [id_user, id_book]);
+        if (results.rowCount != 0) {
+            response.status(200).json(true);
+        } else {
+            response.status(200).json(false);
+        }
     } catch (error) {
         next(error);
     }

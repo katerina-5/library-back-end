@@ -4,7 +4,8 @@ const authLib = require('../libs/favourite');
 module.exports = {
     favourite_author_create,
     favourite_author_delete,
-    get_favourite_authors
+    get_favourite_authors,
+    check_author
 }
 
 // create favourite author
@@ -49,6 +50,26 @@ async function get_favourite_authors(request, response, next) {
         const results = await pool.query('SELECT * FROM authors WHERE id_author IN (SELECT id_author FROM favouriteauthors WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// check author in favourite authors
+async function check_author(request, response, next) {
+    console.log('Check author in favourite authors');
+
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_author = request.body.id_author;
+
+    try {
+        const results = await pool.query('select * from favouriteauthors where id_user = $1 and id_author = $2', [id_user, id_author]);
+        if (results.rowCount != 0) {
+            response.status(200).json(true);
+        } else {
+            response.status(200).json(false);
+        }
     } catch (error) {
         next(error);
     }

@@ -4,7 +4,8 @@ const authLib = require('../libs/favourite');
 module.exports = {
     favourite_serie_create,
     favourite_serie_delete,
-    get_favourite_series
+    get_favourite_series,
+    check_serie
 }
 
 // create favourite serie
@@ -49,6 +50,26 @@ async function get_favourite_series(request, response, next) {
         const results = await pool.query('SELECT * FROM series WHERE id_serie IN (SELECT id_serie FROM favouriteseries WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// check serie in favourite series
+async function check_serie(request, response, next) {
+    console.log('Check serie in favourite series');
+
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_serie = request.body.id_serie;
+
+    try {
+        const results = await pool.query('select * from favouriteseries where id_user = $1 and id_serie = $2', [id_user, id_serie]);
+        if (results.rowCount != 0) {
+            response.status(200).json(true);
+        } else {
+            response.status(200).json(false);
+        }
     } catch (error) {
         next(error);
     }

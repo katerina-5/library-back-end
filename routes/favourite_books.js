@@ -12,6 +12,9 @@ router.post('/', favourite_books_controller.favourite_book_create);
 // DELETE request for delete favourite book
 router.post('/delete', favourite_books_controller.favourite_book_delete);
 
+// POST request for check book in favourite
+router.post('/check', favourite_books_controller.check_book);
+
 // GET request for all books (by user id)
 router.get('/:id', favourite_books_controller.get_favourite_books);
 

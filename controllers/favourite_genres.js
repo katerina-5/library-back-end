@@ -4,7 +4,8 @@ const authLib = require('../libs/favourite');
 module.exports = {
     favourite_genre_create,
     favourite_genre_delete,
-    get_favourite_genres
+    get_favourite_genres,
+    check_genre
 }
 
 // create favourite genre
@@ -49,6 +50,26 @@ async function get_favourite_genres(request, response, next) {
         const results = await pool.query('SELECT * FROM genres WHERE id_genre IN (SELECT id_genre FROM favouritegenres WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// check genre in favourite genres
+async function check_genre(request, response, next) {
+    console.log('Check genre in favourite genres');
+
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_genre = request.body.id_genre;
+
+    try {
+        const results = await pool.query('select * from favouritegenres where id_user = $1 and id_genre = $2', [id_user, id_genre]);
+        if (results.rowCount != 0) {
+            response.status(200).json(true);
+        } else {
+            response.status(200).json(false);
+        }
     } catch (error) {
         next(error);
     }
