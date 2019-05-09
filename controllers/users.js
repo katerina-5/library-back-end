@@ -6,7 +6,8 @@ module.exports = {
     user_detail,
     user_create,
     user_delete,
-    user_update
+    user_update,
+    user_change_password
 };
 
 // Display list of all users.
@@ -51,18 +52,19 @@ async function user_create(request, response, next) {
     }
 }
 
-// Handle user update on POST.
+// Handle user update on PUT.
 async function user_update(request, response, next) {
     console.log('User update');
 
     const token = request.params.token;
     const id_user = await handleTokenLib.getIdUserFromToken(token, next);
     // const id_user = request.params.id;
-    const { login, password, nickname, last_name, first_name, phone, email } = request.body;
+    // const { login, password, nickname, last_name, first_name, phone, email } = request.body;
+    const { nickname, last_name, first_name, phone, email } = request.body;
 
     try {
-        const results = await pool.query('UPDATE users SET login = $2, password = $3, nickname = $4, last_name = $5, first_name = $6, phone = $7, email = $8 WHERE id_user = $1',
-            [id_user, login, password, nickname, last_name, first_name, phone, email]);
+        const results = await pool.query('UPDATE users SET nickname = $2, last_name = $3, first_name = $4, phone = $5, email = $6 WHERE id_user = $1',
+            [id_user, nickname, last_name, first_name, phone, email]);
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
@@ -78,6 +80,34 @@ async function user_delete(request, response, next) {
 
         const results = await pool.query('DELETE FROM users WHERE id_user = $1', [id_user]);
         response.status(200).json(results.rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Change password.
+async function user_change_password(request, response, next) {
+    console.log('User change password');
+
+    const token = request.body.token;
+    const id_user = await handleTokenLib.getIdUserFromToken(token, next);
+    const { old_password, new_password } = request.body;
+
+    try {
+        const getPassword = await pool.query('select password from users where id_user = $1',
+            [id_user]);
+        let dbPassword = getPassword.rows[0].password;
+
+        const check = await bcrypt.compare(old_password, dbPassword);
+
+        if (check) {
+            // update password
+            const results = await pool.query('UPDATE users SET password = $2 WHERE id_user = $1',
+                [id_user, new_password]);
+            response.status(200).json(results.rows);
+        } else {
+            response.status(200).json({ message: 'old password isn\'t right!' });
+        }
     } catch (error) {
         next(error);
     }
