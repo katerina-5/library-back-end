@@ -13,10 +13,10 @@ router.post('/', user_controller.user_create);
 router.get('/', user_controller.user_list);
 
 // GET request for one user.
-router.get('/:id', user_controller.user_detail);
+router.get('/:token', user_controller.user_detail);
 
 // PUT request to update user.
-router.put('/:id', user_controller.user_update);
+router.put('/:token', user_controller.user_update);
 
 // DELETE request to delete user.
 router.delete('/:id', user_controller.user_delete);

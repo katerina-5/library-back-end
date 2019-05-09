@@ -1,5 +1,5 @@
 const pool = require('./../config/postgresql').pool;
-const authLib = require('../libs/favourite');
+const authLib = require('../libs/auth');
 
 module.exports = {
     favourite_genre_create,
