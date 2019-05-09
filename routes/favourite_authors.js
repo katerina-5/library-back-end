@@ -10,7 +10,7 @@ const favourite_authors_controller = require('./../controllers/favourite_authors
 router.post('/', favourite_authors_controller.favourite_author_create);
 
 // DELETE request for delete favourite author
-router.delete('/', favourite_authors_controller.favourite_author_delete);
+router.post('/delete', favourite_authors_controller.favourite_author_delete);
 
 // GET request for all authors (by user id)
 router.get('/:id', favourite_authors_controller.get_favourite_authors);

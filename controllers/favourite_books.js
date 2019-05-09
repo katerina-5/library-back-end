@@ -1,4 +1,5 @@
 const pool = require('./../config/postgresql').pool;
+const authLib = require('../libs/favourite');
 
 module.exports = {
     favourite_book_create,
@@ -10,9 +11,11 @@ module.exports = {
 async function favourite_book_create(request, response, next) {
     console.log('Favourite book create');
 
-    try {
-        const { id_user, id_book } = request.body;
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_book = request.body.id_book;
 
+    try {
         const results = await pool.query('INSERT INTO favouritebooks(id_user, id_book) VALUES($1, $2)', [id_user, id_book]);
         response.status(200).json(results.rows);
     } catch (error) {
@@ -24,9 +27,11 @@ async function favourite_book_create(request, response, next) {
 async function favourite_book_delete(request, response, next) {
     console.log('Favourite book delete');
 
-    try {
-        const { id_user, id_book } = request.body;
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_book = request.body.id_book;
 
+    try {
         const results = await pool.query('DELETE FROM favouritebooks WHERE id_user = $1 AND id_book = $2', [id_user, id_book]);
         response.status(200).json(results.rows);
     } catch (error) {

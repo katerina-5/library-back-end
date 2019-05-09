@@ -10,7 +10,7 @@ const favourite_genres_controller = require('./../controllers/favourite_genres')
 router.post('/', favourite_genres_controller.favourite_genre_create);
 
 // DELETE request for delete favourite genre
-router.delete('/', favourite_genres_controller.favourite_genre_delete);
+router.post('/delete', favourite_genres_controller.favourite_genre_delete);
 
 // GET request for all genres (by user id)
 router.get('/:id', favourite_genres_controller.get_favourite_genres);

@@ -1,4 +1,5 @@
 const pool = require('./../config/postgresql').pool;
+const authLib = require('../libs/favourite');
 
 module.exports = {
     favourite_genre_create,
@@ -10,9 +11,11 @@ module.exports = {
 async function favourite_genre_create(request, response, next) {
     console.log('Favourite genre create');
 
-    try {
-        const { id_user, id_genre } = request.body;
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_genre = request.body.id_genre;
 
+    try {
         const results = await pool.query('INSERT INTO favouritegenres(id_user, id_genre) VALUES($1, $2)', [id_user, id_genre]);
         response.status(200).json(results.rows);
     } catch (error) {
@@ -24,9 +27,11 @@ async function favourite_genre_create(request, response, next) {
 async function favourite_genre_delete(request, response, next) {
     console.log('Favourite genre delete');
 
-    try {
-        const { id_user, id_genre } = request.body;
+    let token = request.body.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
+    const id_genre = request.body.id_genre;
 
+    try {
         const results = await pool.query('DELETE FROM favouritegenres WHERE id_user = $1 AND id_genre = $2', [id_user, id_genre]);
         response.status(200).json(results.rows);
     } catch (error) {
