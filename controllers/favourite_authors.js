@@ -44,9 +44,10 @@ async function favourite_author_delete(request, response, next) {
 async function get_favourite_authors(request, response, next) {
     console.log('List of favourite authors');
 
-    try {
-        const id_user = request.params.id;
+    const token = request.params.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
 
+    try {
         const results = await pool.query('SELECT * FROM authors WHERE id_author IN (SELECT id_author FROM favouriteauthors WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);

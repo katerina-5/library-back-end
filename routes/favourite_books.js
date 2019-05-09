@@ -16,6 +16,6 @@ router.post('/delete', favourite_books_controller.favourite_book_delete);
 router.post('/check', favourite_books_controller.check_book);
 
 // GET request for all books (by user id)
-router.get('/:id', favourite_books_controller.get_favourite_books);
+router.get('/:token', favourite_books_controller.get_favourite_books);
 
 module.exports = router;

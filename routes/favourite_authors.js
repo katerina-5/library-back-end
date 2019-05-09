@@ -16,6 +16,6 @@ router.post('/delete', favourite_authors_controller.favourite_author_delete);
 router.post('/check', favourite_authors_controller.check_author);
 
 // GET request for all authors (by user id)
-router.get('/:id', favourite_authors_controller.get_favourite_authors);
+router.get('/:token', favourite_authors_controller.get_favourite_authors);
 
 module.exports = router;

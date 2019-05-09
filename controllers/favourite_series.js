@@ -44,9 +44,10 @@ async function favourite_serie_delete(request, response, next) {
 async function get_favourite_series(request, response, next) {
     console.log('List of favourite series');
 
-    try {
-        const id_user = request.params.id;
+    const token = request.params.token;
+    const id_user = await authLib.getIdUserFromToken(token, next);
 
+    try {
         const results = await pool.query('SELECT * FROM series WHERE id_serie IN (SELECT id_serie FROM favouriteseries WHERE id_user = $1)',
             [id_user]);
         response.status(200).json(results.rows);

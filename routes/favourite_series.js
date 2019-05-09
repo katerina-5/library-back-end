@@ -16,6 +16,6 @@ router.post('/delete', favourite_series_controller.favourite_serie_delete);
 router.post('/check', favourite_series_controller.check_serie);
 
 // GET request for all series (by user id)
-router.get('/:id', favourite_series_controller.get_favourite_series);
+router.get('/:token', favourite_series_controller.get_favourite_series);
 
 module.exports = router;
