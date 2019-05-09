@@ -23,8 +23,8 @@ async function parse_book(request, response, next) {
             [url_book]);
         if (checkBook.rowCount === 0) {
             // insert into books
-            const addBook = await pool.query('insert into books(id_serie, title_book, url_book, image_url, year, description, rating) values($1, $2, $3, $4, $5, $6, $7)',
-                [id_serie, title_book, url_book, image_url, year, description, rating]);
+            const addBook = await pool.query('insert into books(title_book, url_book, image_url, year, description, rating) values($1, $2, $3, $4, $5, $6)',
+                [title_book, url_book, image_url, year, description, rating]);
             // check book again
             checkBook = await pool.query('SELECT id_book FROM books WHERE url_book = $1',
                 [url_book]);
@@ -61,7 +61,7 @@ async function parse_book(request, response, next) {
                 const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
                     [id_book, checkSerie.rows[0].id_serie]);
             }
-            // id_serie = checkSerie.rows[0].id_serie;
+            id_serie = checkSerie.rows[0].id_serie;
         }
 
         // AUTHORS

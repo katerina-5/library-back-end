@@ -84,7 +84,10 @@ class BookParser extends Parser {
         let result = super.findInformation(this.html, information, " <p>", "</div>");
         result = result.replace(/<p>/g, "");
         result = result.replace(/<\/p>/g, "");
+        result = result.replace(/<br \/>/g, " ");
+        result = result.replace(/<a href=\"\S*\">/g, "");
         result = result.replace(/<a  href=\"\S*\">/g, "");
+        result = result.replace(/<a\s{1,}href=\"\S*\">/g, "");
         result = result.replace(/<\/a>/g, "");
         result = result.replace(/\n/g, " ");
         result = result.replace(/\s{3,}/g, "");

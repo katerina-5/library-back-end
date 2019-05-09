@@ -42,6 +42,7 @@ class SerieParser extends Parser {
         let result = super.findInformation(this.html, information, " <p><p>", "</p></p>");
         result = result.replace(/<p>/g, "");
         result = result.replace(/<\/p>/g, "");
+        result = result.replace(/<br \/>/g, " ");
         result = result.replace(/<a  href=\"\S*\">/g, "");
         result = result.replace(/<\/a>/g, "");
         result = result.replace(/\n/g, " ");
