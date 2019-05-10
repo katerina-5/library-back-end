@@ -14,8 +14,8 @@ async function search_books(request, response, next) {
     const search_request = request.body.search_request;
 
     try {
-        const results = await pool.query('Select * from books where title_book = $1',
-            [search_request]);
+        const results = await pool.query('Select * from books where title_book like $1 or description like $1',
+            ["%" + search_request + "%"]);
         console.log(results.rows);
         response.status(200).json(results.rows);
     } catch (error) {
@@ -31,8 +31,8 @@ async function search_authors(request, response, next) {
     const search_request = request.body.search_request;
 
     try {
-        const results = await pool.query('Select * from authors where full_name = $1',
-            [search_request]);
+        const results = await pool.query('Select * from authors where full_name like $1 or full_name_orig like $1',
+            ["%" + search_request + "%"]);
         console.log(results.rows);
         response.status(200).json(results.rows);
     } catch (error) {
@@ -48,8 +48,8 @@ async function search_genres(request, response, next) {
     const search_request = request.body.search_request;
 
     try {
-        const results = await pool.query('Select * from genres where title_genre = $1',
-            [search_request]);
+        const results = await pool.query('Select * from genres where title_genre like $1 or description like $1',
+            ["%" + search_request + "%"]);
         console.log(results.rows);
         response.status(200).json(results.rows);
     } catch (error) {
@@ -65,8 +65,8 @@ async function search_series(request, response, next) {
     const search_request = request.body.search_request;
 
     try {
-        const results = await pool.query('Select * from series where title_serie = $1',
-            [search_request]);
+        const results = await pool.query('Select * from series where title_serie like $1 or description like $1',
+            ["%" + search_request + "%"]);
         console.log(results.rows);
         response.status(200).json(results.rows);
     } catch (error) {
