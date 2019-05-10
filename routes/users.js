@@ -16,7 +16,7 @@ router.get('/', user_controller.user_list);
 router.get('/:token', user_controller.user_detail);
 
 // PUT request to update user profile information.
-router.put('/:token', user_controller.user_update);
+router.post('/update_information', user_controller.user_update);
 
 // POST request to change password.
 router.post('/change_password', user_controller.user_change_password);

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const pool = require('./../config/postgresql').pool;
 const handleTokenLib = require('../libs/auth');
 
@@ -59,14 +60,18 @@ async function user_create(request, response, next) {
 async function user_update(request, response, next) {
     console.log('User update');
 
-    const token = request.params.token;
+    // const token = request.params.token;
+    const token = request.body.token;
 
     handleTokenLib.checkToken(token, response);
 
     const id_user = await handleTokenLib.getIdUserFromToken(token, next);
     // const id_user = request.params.id;
     // const { login, password, nickname, last_name, first_name, phone, email } = request.body;
-    const { nickname, last_name, first_name, phone, email } = request.body;
+    let { nickname, last_name, first_name, phone, email } = request.body;
+
+    if (phone === '') phone = null;
+    if (email === '') email = null;
 
     try {
         const results = await pool.query('UPDATE users SET nickname = $2, last_name = $3, first_name = $4, phone = $5, email = $6 WHERE id_user = $1',
@@ -110,14 +115,16 @@ async function user_change_password(request, response, next) {
         const check = await bcrypt.compare(old_password, dbPassword);
 
         if (check) {
+            const hashPassword = await bcrypt.hash(new_password, 10);
             // update password
             const results = await pool.query('UPDATE users SET password = $2 WHERE id_user = $1',
-                [id_user, new_password]);
+                [id_user, hashPassword]);
             response.status(200).json(results.rows);
         } else {
             response.status(200).json({ message: 'old password isn\'t right!' });
         }
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }
