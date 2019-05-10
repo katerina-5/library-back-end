@@ -13,6 +13,9 @@ async function favourite_serie_create(request, response, next) {
     console.log('Favourite serie create');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_serie = request.body.id_serie;
 
@@ -29,6 +32,9 @@ async function favourite_serie_delete(request, response, next) {
     console.log('Favourite serie delete');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_serie = request.body.id_serie;
 
@@ -45,6 +51,9 @@ async function get_favourite_series(request, response, next) {
     console.log('List of favourite series');
 
     const token = request.params.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
 
     try {
@@ -61,6 +70,9 @@ async function check_serie(request, response, next) {
     console.log('Check serie in favourite series');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_serie = request.body.id_serie;
 

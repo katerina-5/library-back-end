@@ -13,6 +13,9 @@ async function favourite_author_create(request, response, next) {
     console.log('Favourite author create');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_author = request.body.id_author;
 
@@ -29,6 +32,9 @@ async function favourite_author_delete(request, response, next) {
     console.log('Favourite author delete');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_author = request.body.id_author;
 
@@ -45,6 +51,9 @@ async function get_favourite_authors(request, response, next) {
     console.log('List of favourite authors');
 
     const token = request.params.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
 
     try {
@@ -61,6 +70,9 @@ async function check_author(request, response, next) {
     console.log('Check author in favourite authors');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_author = request.body.id_author;
 

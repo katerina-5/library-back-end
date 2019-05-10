@@ -13,6 +13,9 @@ async function favourite_book_create(request, response, next) {
     console.log('Favourite book create');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_book = request.body.id_book;
 
@@ -29,6 +32,9 @@ async function favourite_book_delete(request, response, next) {
     console.log('Favourite book delete');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_book = request.body.id_book;
 
@@ -45,6 +51,9 @@ async function get_favourite_books(request, response, next) {
     console.log('List of favourite books');
 
     const token = request.params.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
 
     try {
@@ -61,6 +70,9 @@ async function check_book(request, response, next) {
     console.log('Check book in favourite books');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_book = request.body.id_book;
 

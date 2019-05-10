@@ -13,6 +13,9 @@ async function favourite_genre_create(request, response, next) {
     console.log('Favourite genre create');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_genre = request.body.id_genre;
 
@@ -29,6 +32,9 @@ async function favourite_genre_delete(request, response, next) {
     console.log('Favourite genre delete');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_genre = request.body.id_genre;
 
@@ -45,6 +51,9 @@ async function get_favourite_genres(request, response, next) {
     console.log('List of favourite genres');
 
     const token = request.params.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
 
     try {
@@ -61,6 +70,9 @@ async function check_genre(request, response, next) {
     console.log('Check genre in favourite genres');
 
     let token = request.body.token;
+
+    authLib.checkToken(token, response);
+
     const id_user = await authLib.getIdUserFromToken(token, next);
     const id_genre = request.body.id_genre;
 

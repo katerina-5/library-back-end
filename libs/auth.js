@@ -7,7 +7,8 @@ module.exports = {
     verifyJWTToken,
     createJWToken,
     hashPassword,
-    getIdUserFromToken
+    getIdUserFromToken,
+    checkToken
 };
 
 function verifyJWTToken(token) {
@@ -56,4 +57,10 @@ async function getIdUserFromToken(token, next) {
     }
 
     return null;
+}
+
+function checkToken(token, response) {
+    if (token === null) {
+        response.status(401).json([]);
+    }
 }

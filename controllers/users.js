@@ -27,6 +27,9 @@ async function user_detail(request, response, next) {
     console.log('User detail');
 
     const token = request.params.token;
+
+    handleTokenLib.checkToken(token, response);
+
     const id_user = await handleTokenLib.getIdUserFromToken(token, next);
 
     try {
@@ -57,6 +60,9 @@ async function user_update(request, response, next) {
     console.log('User update');
 
     const token = request.params.token;
+
+    handleTokenLib.checkToken(token, response);
+
     const id_user = await handleTokenLib.getIdUserFromToken(token, next);
     // const id_user = request.params.id;
     // const { login, password, nickname, last_name, first_name, phone, email } = request.body;
@@ -90,6 +96,9 @@ async function user_change_password(request, response, next) {
     console.log('User change password');
 
     const token = request.body.token;
+
+    handleTokenLib.checkToken(token, response);
+
     const id_user = await handleTokenLib.getIdUserFromToken(token, next);
     const { old_password, new_password } = request.body;
 
