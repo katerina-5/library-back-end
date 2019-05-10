@@ -37,31 +37,33 @@ async function parse_book(request, response, next) {
 
         // SERIE
         let id_serie = null;
-        if (json.serie != {}) {
+        if (json.serie !== JSON.parse('{}')) {
             // console.log('CONGRATULATIONS! Serie exists.');
 
             const { title_serie, url_serie, description } = json.serie;
-            let checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
-                [url_serie]);
-            if (checkSerie.rowCount === 0) {
-                // insert into series
-                const addSerie = await pool.query('insert into series(title_serie, url_serie, description) values($1, $2, $3)',
-                    [title_serie, url_serie, description]);
-                // check serie again
-                checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
+            if (title_serie !== null) {
+                let checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
                     [url_serie]);
+                if (checkSerie.rowCount === 0) {
+                    // insert into series
+                    const addSerie = await pool.query('insert into series(title_serie, url_serie, description) values($1, $2, $3)',
+                        [title_serie, url_serie, description]);
+                    // check serie again
+                    checkSerie = await pool.query('SELECT id_serie FROM series WHERE url_serie = $1',
+                        [url_serie]);
 
-                const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
-                    [id_book, checkSerie.rows[0].id_serie]);
-            } else {
-                // update series
-                const editSerie = await pool.query('update series set title_serie = $2, url_serie = $3, description = $4 where id_serie = $1',
-                    [checkSerie.rows[0].id_serie, title_serie, url_serie, description]);
+                    const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
+                        [id_book, checkSerie.rows[0].id_serie]);
+                } else {
+                    // update series
+                    const editSerie = await pool.query('update series set title_serie = $2, url_serie = $3, description = $4 where id_serie = $1',
+                        [checkSerie.rows[0].id_serie, title_serie, url_serie, description]);
 
-                const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
-                    [id_book, checkSerie.rows[0].id_serie]);
+                    const updateBook = await pool.query('update books set id_serie = $2 where id_book = $1',
+                        [id_book, checkSerie.rows[0].id_serie]);
+                }
+                id_serie = checkSerie.rows[0].id_serie;
             }
-            id_serie = checkSerie.rows[0].id_serie;
         }
 
         // AUTHORS
@@ -106,7 +108,7 @@ async function parse_book(request, response, next) {
             genres_id.push(checkGenre.rows[0].id_genre);
         });
 
-        if (!(id_serie == null)) {
+        if (!(id_serie === null)) {
             await asyncForEach(authors_id, async (id_author) => {
                 // check serie-author
                 const checkSerieAuthor = await pool.query('select * from seriehasauthors where id_serie = $1 and id_author = $2', [id_serie, id_author]);

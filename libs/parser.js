@@ -40,7 +40,7 @@ async function parseBook(url) {
     if (!(serieEntity == null)) {
         result.serie = serieEntity.json;
     } else {
-        result.serie = JSON.parse({});
+        result.serie = JSON.parse('{}');
     }
 
     console.log("Parsed book: " + JSON.stringify(result.book));
