@@ -76,6 +76,13 @@ async function user_update(request, response, next) {
     try {
         const results = await pool.query('UPDATE users SET nickname = $2, last_name = $3, first_name = $4, phone = $5, email = $6 WHERE id_user = $1',
             [id_user, nickname, last_name, first_name, phone, email]);
+
+        const isAdmin = await pool.query('select * from administrators where id_user = $1', [id_user]);
+        if (isAdmin.rowCount !== 0) {
+            const results = await pool.query('UPDATE administrators SET nickname = $2, last_name = $3, first_name = $4, phone = $5, email = $6 WHERE id_user = $1',
+                [id_user, nickname, last_name, first_name, phone, email]);
+        }
+
         response.status(200).json(results.rows);
     } catch (error) {
         next(error);
@@ -119,6 +126,13 @@ async function user_change_password(request, response, next) {
             // update password
             const results = await pool.query('UPDATE users SET password = $2 WHERE id_user = $1',
                 [id_user, hashPassword]);
+
+            const isAdmin = await pool.query('select * from administrators where id_user = $1', [id_user]);
+            if (isAdmin.rowCount !== 0) {
+                const results = await pool.query('UPDATE administrators SET password = $2 WHERE id_user = $1',
+                    [id_user, hashPassword]);
+            }
+
             response.status(200).json(results.rows);
         } else {
             response.status(200).json({ message: 'old password isn\'t right!' });
